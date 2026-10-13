@@ -1,0 +1,4 @@
+This final file estimates performance after the settings are selected. The examples are original teaching sentences.
+The system predicts a sequence and the evaluator computes its loss. We also compare a simpler baseline.
+The reported number describes this small sample. It does not establish the ability to answer questions or follow instructions.
+We keep the result with the configuration so another reader can repeat the experiment.

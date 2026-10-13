@@ -1,0 +1,12 @@
+{"id":"a1","input":"What is 2 + 2? Return the number only.","expected":"4","slice":"arithmetic"}
+{"id":"a2","input":"What is 7 * 8? Return the number only.","expected":"56","slice":"arithmetic"}
+{"id":"a3","input":"What is 12 - 5? Return the number only.","expected":"7","slice":"arithmetic"}
+{"id":"a4","input":"What is 81 / 9? Return the number only.","expected":"9","slice":"arithmetic"}
+{"id":"e1","input":"Text: Currency USD. Total 14. Return the currency only.","expected":"USD","slice":"extraction"}
+{"id":"e2","input":"Text: The meeting is on Monday. Return the day only.","expected":"Monday","slice":"extraction"}
+{"id":"e3","input":"Text: The box is blue. Return the color only.","expected":"blue","slice":"extraction"}
+{"id":"e4","input":"Text: Quantity 3. Return the quantity only.","expected":"3","slice":"extraction"}
+{"id":"u1","input":"Text: The box is blue. What is its weight? Return UNKNOWN if absent.","expected":"UNKNOWN","slice":"abstention"}
+{"id":"u2","input":"Text: A meeting is planned. What day? Return UNKNOWN if absent.","expected":"UNKNOWN","slice":"abstention"}
+{"id":"u3","input":"Text: Total 14. What currency? Return UNKNOWN if absent.","expected":"UNKNOWN","slice":"abstention"}
+{"id":"u4","input":"Text: The train arrives soon. What time? Return UNKNOWN if absent.","expected":"UNKNOWN","slice":"abstention"}

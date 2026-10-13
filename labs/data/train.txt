@@ -1,0 +1,12 @@
+A model learns from examples. A test measures behavior on new examples.
+The small model reads a sequence of characters. It predicts the next character.
+We keep training data separate from validation data. We choose settings on validation data.
+A clear question needs a clear answer. A useful evaluation needs a clear scoring rule.
+The reader checks a result. The researcher records the input and the output.
+A baseline gives us a point of comparison. A larger model does not always give a better result.
+We save the experiment settings. We record the data version. We inspect the errors.
+The system reads a document and returns a short answer. The answer must match the evidence.
+Some questions have no answer in the document. The system should say when evidence is missing.
+A careful experiment separates a claim from a measurement. The test has limits.
+The model can repeat familiar patterns. New examples reveal whether those patterns help.
+We train a small model to understand the process. We evaluate it before making a claim.

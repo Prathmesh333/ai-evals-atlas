@@ -1,0 +1,4 @@
+The experiment uses a small collection of original sentences. We compare several settings on this validation file.
+A model assigns probabilities to characters. The next character depends on the previous character in this simple model.
+The researcher selects a setting with lower validation loss. The test file stays separate during selection.
+A result needs context. We record how the data was made and how the score was computed.
