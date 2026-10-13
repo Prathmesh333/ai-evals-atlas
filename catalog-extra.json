@@ -1,0 +1,275 @@
+{
+  "sources": {
+    "harmbench": [
+      "HarmBench",
+      "https://github.com/centerforaisafety/HarmBench",
+      "HarmBench authors · repository",
+      "A public framework for standardized red-team and refusal evaluation."
+    ],
+    "simpleqa": [
+      "Simple Evals",
+      "https://github.com/openai/simple-evals",
+      "OpenAI · repository",
+      "Public evaluation implementations, including SimpleQA. Pin the specific task and grader revision."
+    ],
+    "webarena": [
+      "WebArena",
+      "https://github.com/web-arena-x/webarena",
+      "WebArena authors · repository",
+      "Browser-agent tasks in reproducible web environments."
+    ],
+    "belebele": [
+      "Belebele",
+      "https://github.com/facebookresearch/belebele",
+      "Belebele authors · repository",
+      "Multilingual reading-comprehension data and evaluation resources."
+    ],
+    "sklearn-metrics": [
+      "Metrics and scoring",
+      "https://scikit-learn.org/stable/modules/model_evaluation.html",
+      "scikit-learn · documentation",
+      "Definitions and implementation details for prediction metrics. Check the convention used by your installed version."
+    ],
+    "sklearn-cv": [
+      "Cross-validation",
+      "https://scikit-learn.org/stable/modules/cross_validation.html",
+      "scikit-learn · documentation",
+      "Cross-validation designs, group-aware splitting, and time-series splitting."
+    ],
+    "judge-paper": [
+      "Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena",
+      "https://arxiv.org/abs/2306.05685",
+      "Zheng et al. · 2023",
+      "A primary study of model judges, preference evaluation, and evaluator biases."
+    ],
+    "longbench": [
+      "LongBench",
+      "https://github.com/THUDM/LongBench",
+      "LongBench authors · repository",
+      "Long-context benchmark versions and evaluation code."
+    ],
+    "mmmu": [
+      "MMMU",
+      "https://github.com/MMMU-Benchmark/MMMU",
+      "MMMU authors · repository",
+      "Multidisciplinary multimodal understanding and reasoning tasks."
+    ],
+    "whisper": [
+      "Whisper",
+      "https://github.com/openai/whisper",
+      "OpenAI · repository",
+      "Speech-recognition research and evaluation context. Follow language and text-normalization conventions."
+    ],
+    "fairlearn": [
+      "Fairness assessment",
+      "https://fairlearn.org/main/user_guide/assessment/index.html",
+      "Fairlearn · documentation",
+      "Disaggregated metrics, group comparisons, and interpretation of fairness measures."
+    ],
+    "mlperf": [
+      "MLPerf Inference: Datacenter",
+      "https://mlcommons.org/benchmarks/inference-datacenter/",
+      "MLCommons · benchmark suite",
+      "Performance scenarios with defined workloads and quality constraints. Official rules govern compliant submissions."
+    ],
+    "vllm": [
+      "vLLM",
+      "https://github.com/vllm-project/vllm",
+      "vLLM contributors · repository",
+      "Model serving and inference implementation. Consult its matching version for serving and benchmark commands."
+    ],
+    "harness-cli": [
+      "Evaluation harness command-line interface",
+      "https://github.com/EleutherAI/lm-evaluation-harness/blob/main/docs/interface.md",
+      "EleutherAI · documentation",
+      "The documented run, ls, and validate subcommands used in the public-benchmark walkthrough."
+    ],
+    "inspect": [
+      "Inspect AI",
+      "https://github.com/UKGovernmentBEIS/inspect_ai",
+      "Inspect AI contributors · repository",
+      "Framework components for model and agent evaluations."
+    ],
+    "promptfoo": [
+      "Promptfoo",
+      "https://github.com/promptfoo/promptfoo",
+      "Promptfoo contributors · repository",
+      "Declarative testing and comparisons for prompts and AI applications."
+    ],
+    "ifeval": [
+      "Instruction-Following Evaluation for Large Language Models",
+      "https://arxiv.org/abs/2311.07911",
+      "Zhou et al. · 2023",
+      "Verifiable instruction-following constraints and their evaluation."
+    ],
+    "mmlu-pro": [
+      "MMLU-Pro",
+      "https://github.com/TIGER-AI-Lab/MMLU-Pro",
+      "MMLU-Pro authors · repository",
+      "A separate benchmark with revised and more challenging multiple-choice tasks."
+    ],
+    "evalplus": [
+      "EvalPlus",
+      "https://github.com/evalplus/evalplus",
+      "EvalPlus authors · repository",
+      "Expanded executable tests for supported code-generation benchmarks."
+    ],
+    "livecode": [
+      "LiveCodeBench",
+      "https://github.com/LiveCodeBench/LiveCodeBench",
+      "LiveCodeBench authors · repository",
+      "Time-based code evaluation. State the release and date window used."
+    ],
+    "tau2": [
+      "τ²-bench",
+      "https://github.com/sierra-research/tau2-bench",
+      "Sierra Research · repository",
+      "Tool-agent-user interaction with domain-specific tasks and environments."
+    ],
+    "tinybenchmarks": [
+      "tinyBenchmarks: evaluating LLMs with fewer examples",
+      "https://arxiv.org/abs/2402.14992",
+      "Maia Polo et al. · 2024",
+      "A primary study of smaller benchmark sets and item-response-based estimation. Its assumptions and validation matter."
+    ],
+    "kappa": [
+      "Cohen's kappa",
+      "https://www.statsmodels.org/dev/generated/statsmodels.stats.inter_rater.cohens_kappa.html",
+      "statsmodels · documentation",
+      "Agreement statistic, implementation, and inference details."
+    ],
+    "coco": [
+      "COCO detection evaluation",
+      "https://cocodataset.org/dataset/detection-eval.htm",
+      "COCO · benchmark documentation",
+      "Official detection metric conventions and thresholds."
+    ]
+  },
+  "benchmarks": [
+    [
+      "HarmBench",
+      "Safety",
+      "harmbench",
+      "Evaluate red-team methods and target-model defenses under a declared protocol.",
+      "Attack or defense outcomes using the selected task set and classifier.",
+      "The threat model, attack budget, and grader affect the result. It is not a general certificate of safety."
+    ],
+    [
+      "SimpleQA",
+      "Truthfulness",
+      "simpleqa",
+      "Short factual questions with a specified answer-grading procedure.",
+      "Correctness and abstention categories under the chosen implementation.",
+      "Judge reliability and dataset scope constrain factual-reliability claims."
+    ],
+    [
+      "WebArena",
+      "Agents",
+      "webarena",
+      "Browser agents complete tasks in controlled web environments.",
+      "Task success based on the benchmark's state and outcome checks.",
+      "Browser state, environment version, action interface, and budgets are part of the result."
+    ],
+    [
+      "Belebele",
+      "Multilingual",
+      "belebele",
+      "Reading-comprehension tasks across many languages.",
+      "Accuracy for each named language and split.",
+      "Reading comprehension does not establish conversational, cultural, or translation quality in that language."
+    ],
+    [
+      "MMLU-Pro",
+      "Knowledge",
+      "mmlu-pro",
+      "A revised multiple-choice benchmark with harder questions and expanded answer options.",
+      "Accuracy on the named version and subject set.",
+      "This is not interchangeable with MMLU. Match the prompt and scoring protocol."
+    ],
+    [
+      "IFEval",
+      "Instructions",
+      "ifeval",
+      "Instruction-following tasks with verifiable constraints.",
+      "Prompt-level and instruction-level compliance under the specified strict or loose checks.",
+      "Constraint compliance does not establish factual correctness or general helpfulness."
+    ],
+    [
+      "EvalPlus",
+      "Code",
+      "evalplus",
+      "Additional test coverage for supported code-generation tasks.",
+      "Functional correctness using the named augmented test set.",
+      "Test suites remain finite. Passing more tests does not prove correctness for all inputs."
+    ],
+    [
+      "LiveCodeBench",
+      "Code",
+      "livecode",
+      "Code tasks collected over time with several evaluation scenarios.",
+      "Task-specific success for a declared release and collection window.",
+      "Task freshness reduces some exposure risks but cannot prove that a model has never seen related material."
+    ],
+    [
+      "LongBench",
+      "Long context",
+      "longbench",
+      "Tasks for long-context comprehension and reasoning.",
+      "Task-specific scores for the named benchmark version.",
+      "Input length, truncation, evidence position, and prompt settings affect results."
+    ],
+    [
+      "MMMU",
+      "Multimodal",
+      "mmmu",
+      "Questions that combine visual material and subject knowledge.",
+      "Accuracy under the selected task and input protocol.",
+      "The result does not cover all vision tasks and says nothing by itself about audio or video."
+    ],
+    [
+      "τ²-bench",
+      "Agents",
+      "tau2",
+      "Agent interaction with users, tools, and domain environments.",
+      "Task outcomes and repeated-trial reliability for the selected domain.",
+      "Keep the simulator, tool state, rules, and task revision fixed across comparisons."
+    ],
+    [
+      "MLPerf Inference",
+      "Performance",
+      "mlperf",
+      "System performance under specified workloads and quality requirements.",
+      "Scenario-specific throughput or latency with the required quality constraints.",
+      "A custom timing script is not an official MLPerf result. Read the submission rules before claiming compliance."
+    ],
+    [
+      "MT-Bench",
+      "Preference",
+      "judge-paper",
+      "Multi-turn conversational evaluation using a specified judging protocol.",
+      "Rubric scores from the declared judge and setup.",
+      "Judge version, position, verbosity, and self-preference effects can influence the score."
+    ]
+  ],
+  "glossary": {
+    "Estimand": "The precise quantity an experiment aims to estimate for a specified population and set of conditions.",
+    "Cross-validation": "Repeated fitting and evaluation on planned training and held-out partitions of a dataset.",
+    "Nested cross-validation": "A design with inner folds for model selection and outer folds for evaluating that selection process.",
+    "Power": "The probability that an analysis detects a specified effect when that effect exists, under its assumptions.",
+    "Construct validity": "Whether evidence supports interpreting a test as a measurement of its intended ability or property.",
+    "Item response theory": "A family of models relating responses to item properties and latent ability estimates under explicit assumptions.",
+    "Time to first token": "The elapsed time to the first generated token under a stated timing boundary.",
+    "Inter-token latency": "The elapsed time between successive output tokens under a stated measurement convention.",
+    "Prefill": "The inference stage that processes the input context before token-by-token generation.",
+    "KV cache": "Stored key and value representations reused by attention during autoregressive generation.",
+    "Pareto frontier": "Configurations for which improving one measured objective requires worsening at least one other objective.",
+    "Word error rate": "The sum of word substitutions, deletions, and insertions divided by the reference word count.",
+    "Intersection over union": "The overlap of two regions divided by their union under the selected region definition.",
+    "Oracle context": "Correct evidence supplied directly to a system to separate retrieval failures from later failures.",
+    "Cohen's kappa": "A chance-corrected agreement measure for two raters with a specified label scheme.",
+    "Bradley–Terry model": "A probabilistic model of pairwise outcomes using relative strength parameters.",
+    "Goodhart's law": "A warning that optimizing a proxy measure can weaken its relationship with the actual objective.",
+    "Demographic parity": "A criterion comparing positive-decision rates across specified groups.",
+    "Equalized odds": "A criterion comparing error rates across specified groups conditional on the true outcome."
+  }
+}

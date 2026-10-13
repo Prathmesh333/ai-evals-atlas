@@ -3,7 +3,7 @@
   const $ = (selector) => document.querySelector(selector);
   const all = (selector) => [...document.querySelectorAll(selector)];
   const storageKey = 'ai-evals-atlas-progress-v1';
-  const chapters = (window.ATLAS_SEARCH || []).filter(item => !['benchmarks.html','diagrams.html','playground.html','labs.html','glossary.html','sources.html'].includes(item.url));
+  const chapters = (window.ATLAS_SEARCH || []).filter(item => item.kind === 'chapter');
   let completed = [];
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -19,6 +19,7 @@
     });
   }
   updateProgress();
+  $('.side-nav [aria-current="page"]')?.scrollIntoView({block: 'nearest'});
   all('[data-complete]').forEach(button => button.addEventListener('click', () => {
     const slug = button.dataset.complete;
     completed = completed.includes(slug) ? completed.filter(item => item !== slug) : [...completed, slug];

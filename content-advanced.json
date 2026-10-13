@@ -1,0 +1,400 @@
+[
+  {
+    "slug": "classical-ml",
+    "after": "ml-basics",
+    "title": "Evaluate prediction models beyond LLMs",
+    "stage": "Foundations",
+    "level": "10–20",
+    "summary": "Evaluate classification, regression, ranking, clustering, forecasting, and decision policies.",
+    "sections": [
+      [
+        "Match the prediction to the decision",
+        "AI evaluation also covers models that never produce text. A classifier assigns a label or class probability. A regressor predicts a number. A ranker orders candidates. A forecasting model predicts future values. Each output needs a different evaluation contract.\nFor a demand forecast, predicting the usual value can be useful even when rare peaks remain difficult. For an anomaly detector, the rare event might be the entire purpose. Choose the decision and its error costs before selecting an aggregate metric.\nA baseline should match that decision. Compare a forecast with a seasonal naive forecast. Compare a classifier with majority-class and simple linear baselines. Compare a recommender with a popularity baseline. A complex model should justify its added operational cost."
+      ],
+      [
+        "Understand regression and probability metrics",
+        "Mean absolute error averages absolute prediction errors. Root mean squared error takes the square root of the average squared error. Squaring makes large errors contribute more. Report the target unit and inspect errors by target range.\nFor actual values [2, 4, 8] and predictions [3, 4, 6], absolute errors are [1, 0, 2]. Mean absolute error is 1. Root mean squared error is √(5/3), about 1.29. Neither value states whether the error is acceptable for the application.\nROC-AUC evaluates ordering across classification thresholds. A precision-recall curve often makes rare-positive tradeoffs easier to inspect. Select the operating threshold using validation data, then report performance at that threshold. Ranking quality, calibration, and decision quality are separate properties."
+      ],
+      [
+        "Cross-validation without leakage",
+        "K-fold cross-validation fits a model repeatedly while holding out a different fold each time. Fit preprocessing inside each training fold. Scaling or selecting features on the full dataset can reveal information from the held-out fold.\nUse group-aware splits for related subjects and time-aware splits for forecasting. Nested cross-validation separates hyperparameter selection in inner folds from evaluation in outer folds. Fold scores are related estimates, not a collection of independent experiments.\nA forecasting test should reproduce the information available at prediction time. Evaluate each horizon separately and use rolling origins where appropriate. Backfilled records or features calculated with future data can create excellent historical scores that cannot be reproduced in deployment."
+      ],
+      [
+        "Ranking, clustering, and policies",
+        "Evaluate a recommender on the candidate set users would actually face. Retrieval recall, ranking quality, novelty, and user outcomes measure different properties. Logged clicks reflect prior exposure as well as preference, so offline ranking results can be biased.\nFor clustering, internal separation metrics describe geometry under a selected representation. They do not prove that clusters are useful categories. If external labels exist, use them with a clearly stated purpose and check stability across samples.\nFor reinforcement-learning policies, measure return over multiple seeds and environments, including constraint violations. A simulator result applies to that simulator. Off-policy evaluation from logs needs assumptions about action coverage and the logging policy; it is not equivalent to a randomized deployment test."
+      ]
+    ],
+    "exercise": "Choose a classification task and a forecasting task. State the prediction unit, baseline, split rule, metric, and deployment threshold for each.",
+    "question": "Can you standardize the entire dataset before cross-validation?",
+    "answer": "Not when standardization learns statistics from the data. Fit it inside each training fold so the held-out fold does not influence the transformation.",
+    "refs": [
+      "sklearn-metrics",
+      "sklearn-cv"
+    ]
+  },
+  {
+    "slug": "experimental-design",
+    "after": "dataset-design",
+    "title": "Design an experiment before running it",
+    "stage": "Build evaluations",
+    "level": "45–60",
+    "summary": "Define the unit of analysis, control confounders, plan power, and interpret rare failures.",
+    "sections": [
+      [
+        "Write the estimand",
+        "The estimand is the quantity the experiment aims to estimate. For example: the difference in task success between two systems on next month's English support requests, under a fixed tool budget. That sentence specifies more than a benchmark name.\nChoose the experimental unit. A request, user, document, repository, or task family can be the independent unit. Several questions from one document share context. Resampling those questions independently can understate uncertainty.\nDefine the primary outcome and a small set of secondary outcomes before observing results. Record exclusions, stopping rules, retries, and missing-result treatment. A predeclared protocol reduces the temptation to choose whichever analysis favors the candidate."
+      ],
+      [
+        "Separate model effects from system effects",
+        "If you change the model, prompt, retriever, and output budget together, you measure a complete system change. You cannot attribute the improvement to the model alone. That combined comparison can still be useful if the deployment decision concerns the whole system.\nAn ablation changes one component while holding other conditions fixed. A factorial experiment changes several factors in a planned combination, which can reveal interactions. A better prompt might help one model and hurt another.\nRandomize execution order when server load or API behavior can drift. Interleave candidate and baseline runs rather than running all baseline cases on Monday and all candidate cases on Friday. Preserve the pairing in analysis."
+      ],
+      [
+        "Plan sample size around the decision",
+        "Power is the chance of detecting a specified effect under a specified analysis when that effect exists. A sample-size calculation needs an effect size, expected variability, an error criterion, and assumptions about dependence.\nThe simple proportion formula in the statistics chapter plans precision for one rate. It is not a universal power calculation for a paired model comparison. Pilot data can estimate how often systems disagree, which influences paired-comparison precision.\nIf important cases are rare, stratify sampling to obtain enough cases for those slices. Weight results back to the target population when estimating an overall rate. Publish both the sampling proportions and the population weights."
+      ],
+      [
+        "Interpret zero failures and repeated looks",
+        "Zero failures does not prove zero risk. With independent trials and zero observed failures, a rough 95% upper failure-rate bound is 3/n. The exact one-sided binomial bound is 1 − 0.05^(1/n). With 100 trials, that bound is about 2.95%.\nThe bound depends on representative sampling and independence. Repeating one easy prompt 100 times does not establish a failure rate for 100 different production situations.\nRepeatedly checking a fixed-sample test and stopping when it becomes significant changes its error rate. Use a fixed stopping rule or a valid sequential procedure. For many comparisons, use a correction or a separate confirmation experiment, and report the selection process."
+      ]
+    ],
+    "exercise": "Write a one-page protocol for comparing two support assistants. Include the estimand, randomization unit, primary metric, missing-answer policy, and stopping rule.",
+    "question": "Does zero failure in 100 independent trials establish a failure rate below 1%?",
+    "answer": "No. The one-sided 95% upper bound is about 2.95% under the binomial assumptions. More representative independent evidence is needed for a 1% claim.",
+    "refs": [
+      "wilson"
+    ]
+  },
+  {
+    "slug": "human-evaluation",
+    "after": "graders",
+    "title": "Human evaluation and preference studies",
+    "stage": "Build evaluations",
+    "level": "60–70",
+    "summary": "Create annotation rubrics, measure agreement, and separate preference from correctness.",
+    "sections": [
+      [
+        "Choose an evaluation format",
+        "An absolute rubric scores an answer against defined criteria. A pairwise comparison asks which of two answers better satisfies the criteria. A task-based study observes whether a person can complete real work with the system. Choose the format that matches the claim.\nSeparate correctness, completeness, evidence support, style, and user preference. An answer can be preferred because it is confident or concise while being less accurate. A single overall preference score can hide that distinction.\nDefine ties and unjudgeable cases. A reviewer who lacks the domain knowledge should be able to mark a case for specialist review. Forcing a guess creates labels that look decisive but are not defensible."
+      ],
+      [
+        "Build a labeling operation",
+        "Write the rubric before large-scale annotation. Include boundary examples, common mistakes, and instructions for missing evidence. Run a pilot on a shared batch and revise unclear criteria.\nBlind system identity where practical and randomize answer position. Keep the information shown to reviewers consistent. Record whether reviewers can browse, execute code, or inspect source documents because these permissions affect their judgments.\nTrain reviewers on the task and compensate the work appropriately. Plan breaks and assignment sizes to reduce fatigue. Keep an audit sample and use adjudication for disagreements. Avoid changing the rubric mid-study without versioning and reassessing affected labels."
+      ],
+      [
+        "Measure agreement with its assumptions",
+        "Raw agreement is the fraction of labels that match. Chance-corrected measures such as Cohen's kappa use a model of expected agreement. Kappa is (observed agreement − expected agreement) / (1 − expected agreement), and depends on the label distribution.\nFor more than two raters, missing labels, or ordered ratings, choose a statistic that fits the design. Report the exact method, weighting, and uncertainty. Low agreement can indicate ambiguity in the task rather than poor reviewer effort.\nInspect disagreements by category. If reviewers agree on factual errors but disagree on tone, refine the tone rubric rather than discarding the correctness labels. Preserve the original judgments and the adjudicated result."
+      ],
+      [
+        "Interpret pairwise rankings",
+        "A win rate needs a denominator and a tie policy. For example, 40 wins, 40 losses, and 20 ties can be reported as 40% strict wins or 50% with half-credit ties. State which quantity you report.\nBradley–Terry-style models estimate relative strength from comparisons. The result depends on the opponent pool, sampling, and model assumptions. It is not an absolute measure of intelligence, and it can change when the comparison pool changes.\nIf one user judges many pairs, account for that dependence. Test position effects and preference sensitivity to response length. The MT-Bench and Chatbot Arena paper documents concerns with model judging that also motivate careful study design."
+      ]
+    ],
+    "exercise": "Create a rubric with three independent dimensions for a research answer. Write one tie example and one example requiring specialist review.",
+    "question": "Is a 70% preference win rate the same as 70% factual accuracy?",
+    "answer": "No. Preference and factual correctness are different outcomes. The study must explicitly measure accuracy before making an accuracy claim.",
+    "refs": [
+      "judge-paper",
+      "kappa"
+    ]
+  },
+  {
+    "slug": "reasoning-code",
+    "after": "benchmark-practice",
+    "title": "Evaluate reasoning, code, and instructions",
+    "stage": "Build evaluations",
+    "level": "65–75",
+    "summary": "Check answers, executable behavior, constraints, and inference budgets separately.",
+    "sections": [
+      [
+        "Reasoning outcomes and explanations",
+        "A correct final answer provides outcome evidence. A plausible explanation provides a different kind of evidence. Models can produce persuasive explanations for wrong answers, and a correct answer can result from a shortcut.\nFor mathematics, decide whether the task requires only a numerical answer, a derivation, or a proof. Define equivalence rules for units, fractions, expressions, and tolerance. Symbolic comparison needs domain assumptions; two expressions are not equivalent merely because they match at one sampled input.\nFor scientific questions, distinguish factual recall, application of a method, and experimental design. Expert review can be necessary when correctness depends on unstated physical or domain assumptions. Keep unresolvable ambiguity out of a supposedly exact-answer metric."
+      ],
+      [
+        "Compute at inference time",
+        "A reasoning system can spend additional tokens, sample multiple solutions, use tools, or run a verifier. Compare equal-budget systems when asking about efficiency. Also show performance across budgets when asking about the best attainable result.\nSeparate the generator from the selector. Pass@k measures whether a successful solution exists among attempts. A real selector must identify it without access to the hidden answer. Best-of-k with an oracle is not the same as a deployable best-of-k system.\nAn explanation is not direct access to internal computation. Evaluate the correctness of stated steps when the task requires them, but do not treat the text as a complete causal account of how the model reached its answer."
+      ],
+      [
+        "Executable code evaluation",
+        "Use hidden tests that cover edge cases and the specification. Include fail-to-pass tests for the requested fix and pass-to-pass tests for existing behavior. A patch that fixes one test while breaking the application should fail the task.\nTest code in an isolated environment with resource limits. Separate build failures, dependency failures, test failures, and infrastructure timeouts. Record environment versions because an unchanged patch can behave differently across dependency versions.\nHumanEval covers function generation. SWE-bench covers repository issue resolution. EvalPlus strengthens tests for supported code benchmarks. LiveCodeBench uses time-based task collection. These designs provide different evidence; none proves freedom from contamination or correctness for every possible input."
+      ],
+      [
+        "Instruction following and structured output",
+        "A verifiable instruction can specify a response format, allowed vocabulary, or a countable requirement. IFEval studies this kind of instruction compliance. The metric should match the instruction rather than a loosely related style preference.\nFor JSON tasks, test parsing, schema, field types, and semantic values separately. Valid JSON with the wrong amount is a semantic failure. Correct information wrapped in prose can be a format failure when a consuming program requires raw JSON.\nReport individual constraints and all-constraints-passed rates. A system that satisfies four of five constraints on every case can have high average constraint accuracy and zero complete-task success."
+      ]
+    ],
+    "exercise": "Write five tests for a generated median function, including an empty-input policy and an even-length input. State how you will isolate execution.",
+    "question": "Why can pass@10 overstate the usefulness of a one-answer product?",
+    "answer": "Pass@10 can credit any successful attempt among ten. A one-answer product needs either first-attempt success or a validated selector that finds the correct answer within the declared budget.",
+    "refs": [
+      "human-eval",
+      "swe",
+      "evalplus",
+      "livecode",
+      "ifeval"
+    ]
+  },
+  {
+    "slug": "long-context",
+    "after": "rag-agents",
+    "title": "Long context, retrieval, and memory",
+    "stage": "Advanced systems",
+    "level": "70–80",
+    "summary": "Test evidence use across position, length, distractors, sessions, and memory updates.",
+    "sections": [
+      [
+        "Capacity is not effective use",
+        "A context limit states how much input a system accepts. Effective context measures whether the system uses relevant information reliably within that input. The two can differ.\nConstruct a matrix of input lengths and evidence positions. Place the same fact near the start, middle, and end. Add plausible distractors and contradictory versions. Keep the question and success rule fixed while changing the condition.\nA needle-retrieval task tests finding a fact. It does not establish multi-document synthesis, conflict resolution, or reasoning across distant passages. Use several task families rather than reporting a single retrieval percentage as long-context understanding."
+      ],
+      [
+        "Evaluate the retrieval boundary",
+        "For an answerable question, identify the evidence needed to support the answer. Measure whether the retriever returns that evidence and whether the generator uses it correctly. For an unanswerable question, define the expected abstention behavior.\nAn oracle-context experiment supplies the correct evidence directly. If the system still fails, retrieval is not the only problem. Comparing no-context, retrieved-context, and oracle-context conditions helps locate the bottleneck.\nEvaluate chunking, reranking, and context assembly with the same question set. A higher retrieval recall can hurt generation if added passages consume the budget or introduce contradictions. More retrieved text is not automatically more useful evidence."
+      ],
+      [
+        "Memory creates a time dimension",
+        "Persistent memory stores information across interactions. Test whether the system writes the correct fact, retrieves it later, updates it when it changes, and deletes it when required. Treat each operation as a measurable state change.\nUse synthetic users with different facts and isolated memory stores. Check that one user's information does not influence another user's response. Include stale preferences, conflicting updates, and explicit requests not to retain a fact.\nDistinguish conversational context, stored memory, and learned model weights. Deleting a memory record does not remove information from model weights. A successful deletion test must identify which storage layer it evaluates."
+      ],
+      [
+        "Design a diagnostic report",
+        "Report results by context length, evidence position, task type, and answerability. Include truncation rates and the actual input-token count after template construction. A system can silently truncate the only relevant passage.\nFor multi-step memory tests, save the state before and after each action. Reset state between independent trials. If the test reuses one evolving memory store, the later cases are not independent measurements.\nLongBench provides public long-context tasks and versions. Name the exact version and task selection. Use it alongside application-specific evidence tests rather than assuming its average matches your document workload."
+      ]
+    ],
+    "exercise": "Create nine cases by crossing three evidence positions with three input lengths. Add one conflicting-document case and one missing-evidence case.",
+    "question": "What does failure with oracle context tell you?",
+    "answer": "The system fails even when correct evidence is supplied. Investigate interpretation, generation, instructions, and grading rather than attributing the entire failure to retrieval.",
+    "refs": [
+      "longbench"
+    ]
+  },
+  {
+    "slug": "multimodal",
+    "after": "long-context",
+    "title": "Evaluate images, audio, and video",
+    "stage": "Advanced systems",
+    "level": "75–85",
+    "summary": "Separate perception, reasoning, generation quality, and preprocessing effects.",
+    "sections": [
+      [
+        "Vision and document tasks",
+        "A vision task can ask for image classification, object detection, segmentation, text reading, chart interpretation, or reasoning. Choose the output contract for that task. A description that sounds reasonable does not prove that the model read a small chart label.\nIntersection over union divides overlap area by union area. Detection average precision summarizes precision-recall behavior under a specified matching and threshold protocol. Segmentation metrics compare pixel or region assignments. State the class mapping and handling of absent classes.\nFor document understanding, measure text extraction and downstream answers separately. Preserve the actual image resolution, crop, compression, and page order. A model can fail because preprocessing removed the evidence before inference."
+      ],
+      [
+        "Audio and speech",
+        "Word error rate is (substitutions + deletions + insertions) / reference words. It can exceed 100% when insertions are numerous. State text normalization rules, language handling, and the treatment of punctuation and numbers.\nWith ten reference words, one substitution, two deletions, and one insertion give a 40% word error rate. That rate does not identify which errors matter. A mistaken dosage or account number can have a different consequence from a missing article.\nFor speech translation or spoken assistants, also evaluate meaning, turn-taking, latency, and task completion. Transcription quality alone does not measure the complete voice interaction. Include accents, noise conditions, overlapping speakers, and silence where relevant."
+      ],
+      [
+        "Video and generated media",
+        "A video evaluator should record frame sampling, resolution, duration, audio access, and timestamp conventions. Sparse frames can omit the event that determines the answer. Test event ordering and temporal localization in addition to object recognition.\nGenerated images or audio need several dimensions: instruction match, perceptual quality, artifacts, diversity, and prohibited content under the chosen policy. Distribution metrics such as FID depend on the feature representation, sample count, and reference distribution. They do not replace case-level instruction checks.\nHuman review remains useful for perception and preference. Blind the generator identity and standardize display or playback conditions. A comparison on different screens, volumes, or compression levels can mix system effects with presentation effects."
+      ],
+      [
+        "Build a multimodal protocol",
+        "Store a manifest of media identifiers, transformations, and hashes. Define whether the system receives text extracted by an external OCR or speech system. External preprocessing can substantially change what is being measured.\nUse a text-only ablation where appropriate to detect whether answers can be guessed without the media. Pair easy perception cases with reasoning cases that require the perceived evidence.\nMMMU provides a public multimodal understanding benchmark. A score on its tasks is not a general measure of all vision, audio, or video abilities. Report task families and modality-specific conditions alongside the aggregate."
+      ]
+    ],
+    "exercise": "Design a chart-reading test with three image resolutions. Include one question answerable from the title alone and one requiring exact axis values.",
+    "question": "Can word error rate be greater than 100%?",
+    "answer": "Yes. Inserted words increase the numerator, which can exceed the number of reference words. Report the normalization and alignment convention.",
+    "refs": [
+      "mmmu",
+      "whisper",
+      "coco"
+    ]
+  },
+  {
+    "slug": "fairness",
+    "after": "safety-robustness",
+    "title": "Fairness, languages, and accessibility",
+    "stage": "Advanced systems",
+    "level": "75–85",
+    "summary": "Measure who benefits, who fails, and whether aggregate scores hide unequal service.",
+    "sections": [
+      [
+        "Start from the affected people",
+        "A fairness assessment begins with the use case and affected people. Identify harms such as unequal access, inappropriate exclusion, stereotyping, or systematically worse service. One parity metric cannot represent all of these concerns.\nCompare relevant outcomes across groups when collecting and using those attributes is appropriate. State why the groups matter and how labels were obtained. A protected attribute should not be inferred casually from names or appearance.\nSelection-rate parity compares how often groups receive a positive decision. Equalized-odds criteria compare error rates conditional on the true label. Calibration concerns predicted probabilities. These criteria can conflict, so justify the chosen measures in context."
+      ],
+      [
+        "Look beyond one group at a time",
+        "Averages for one attribute can hide failures at intersections. Language, disability, document quality, and device constraints can interact. Report sample counts and uncertainty for each relevant slice.\nAvoid declaring a small group equivalent merely because a significance test is inconclusive. A low-powered comparison can fail to detect a meaningful gap. Use effect sizes, confidence intervals, and a decision-relevant tolerance.\nFairlearn's assessment tools support disaggregated metrics and fairness measures. The tool calculates quantities; the evaluator remains responsible for choosing a valid task, population, and interpretation."
+      ],
+      [
+        "Evaluate languages as languages",
+        "Translate a benchmark only when translation preserves the construct. Wordplay, cultural references, morphology, and label balance can change. Have competent speakers review the translated tasks and acceptable answers.\nInclude native tasks and code-switching where those reflect users. Report language-specific success, token use, latency, and refusal. A tokenizer can increase cost for one language even when answer accuracy is similar.\nFor multilingual judges, check the judge's competence in each tested language. Strong agreement on English does not establish reliable grading in another language. Keep translation errors separate from model errors."
+      ],
+      [
+        "Accessibility is a system outcome",
+        "Test whether users can complete the task with their actual input and output methods. Keyboard access, screen readers, speech input, and understandable error recovery can affect success independently of model accuracy.\nMeasure completion, correction effort, abandonment, and human escalation for relevant user groups. Pair those outcomes with representative qualitative observations. A technically correct response can still be unusable if its format excludes the user.\nDocument remaining coverage gaps. Do not convert a limited set of successful accessibility tests into a claim that the system serves every disability, language, or assistive technology."
+      ]
+    ],
+    "exercise": "Create a slice plan for a multilingual support assistant. Include language, input method, sample sizes, and one intersection that could hide a failure.",
+    "question": "Does an inconclusive difference test prove two groups receive equivalent service?",
+    "answer": "No. The study may have too little data. Equivalence requires a defined tolerance and an analysis designed to support that claim.",
+    "refs": [
+      "fairlearn"
+    ]
+  },
+  {
+    "slug": "benchmark-science",
+    "after": "fairness",
+    "title": "Benchmark validity and measurement science",
+    "stage": "Advanced systems",
+    "level": "80–90",
+    "summary": "Understand saturation, contamination, item difficulty, adaptive testing, and invalid proxies.",
+    "sections": [
+      [
+        "Validate the construct",
+        "A construct is the ability or property a test intends to measure. A benchmark for reasoning should not be solved mainly through a formatting cue. A benchmark for grounded answers should not reward unsupported statements simply because they match a reference.\nCheck content coverage, scoring behavior, and relationships with real tasks. Inspect whether humans and models interpret questions as intended. Add counterfactual or contrastive cases that remove shortcuts while keeping the relevant task structure.\nReliability concerns consistency of measurement. Validity concerns whether the measurement supports its intended interpretation. A perfectly repeatable broken test is reliable in a narrow sense and still invalid for the claim."
+      ],
+      [
+        "Saturation and contamination",
+        "A saturated benchmark leaves little room to distinguish strong systems. Small differences near the ceiling can be dominated by annotation mistakes or arbitrary answer formatting. Harder tasks can restore discrimination, but difficulty alone does not guarantee relevance.\nContamination checks can include exact matching, near-duplicate detection, provenance review, and tests on newly authored variants. A failure to detect overlap does not prove that overlap is absent. External model training data is often unavailable for a complete audit.\nFresh or private tasks reduce some exposure risks. They can still become development data through repeated use. Maintain access controls and a retirement policy for frequently queried holdouts. Report benchmark age and known exposure rather than asserting contamination-free performance without evidence."
+      ],
+      [
+        "Difficulty and adaptive tests",
+        "Item response theory models how response probability relates to an estimated ability and item properties. A simple form is P(correct) = sigmoid(a(θ − b)), where θ is ability, b is difficulty, and a controls discrimination.\nThis model is an assumption, not a definition of intelligence. Multiple abilities, model-specific shortcuts, and dependent tasks can violate it. Check fit before using the estimate to compare systems.\nAdaptive testing selects items based on earlier responses to estimate ability efficiently. Its scores require an appropriate calibrated item bank and analysis. A changing set of questions is not automatically comparable across systems. Preserve uncertainty and the selection protocol."
+      ],
+      [
+        "Create a maintainable benchmark",
+        "Write a benchmark card describing purpose, users, task sampling, labels, metric, license, data access, and limitations. Include baselines that expose trivial shortcuts and grader tests that reject invalid outputs.\nVersion task corrections and keep a changelog. If an answer key changes, recompute affected comparisons and explain why. Preserve an audit path from a published score to the exact tasks and scorer.\nUse a portfolio of evidence: public benchmarks for comparison, private application tasks for relevance, stress tests for failure discovery, and production measurements for transfer. A single scalar cannot substitute for these different questions."
+      ]
+    ],
+    "exercise": "Audit a benchmark question for shortcuts. Create a contrastive variant and explain whether the variant preserves the intended ability.",
+    "question": "Can a test be consistent but fail to measure the intended ability?",
+    "answer": "Yes. A repeatable test can reward a shortcut or irrelevant feature. Reliability alone does not establish validity.",
+    "refs": [
+      "helm",
+      "livecode",
+      "tinybenchmarks"
+    ]
+  },
+  {
+    "slug": "serving-performance",
+    "after": "scaling-training",
+    "title": "Benchmark latency, throughput, and cost",
+    "stage": "Advanced systems",
+    "level": "85–95",
+    "summary": "Measure a serving system under realistic load and preserve the quality constraint.",
+    "sections": [
+      [
+        "Define the clocks",
+        "End-to-end latency measures the time from client request initiation to complete response receipt under a specified boundary. Time to first token measures delay before the first output token. Inter-token latency describes the spacing of subsequent output tokens.\nA non-streaming request gives end-to-end timing but does not reveal first-token timing. Do not label its response duration as time to first token. Record whether network time, queueing, preprocessing, and postprocessing are included.\nReport latency distributions rather than only the mean. A p95 is the 95th percentile under a stated measurement and aggregation method. Combining percentiles from separate runs by averaging them does not produce the percentile of the combined requests."
+      ],
+      [
+        "Control the workload and load generator",
+        "Specify input and output length distributions, concurrency, arrival process, caching, hardware, model version, quantization, and batching. Compare like workloads. Short responses and warm caches can make a system appear faster without improving the target use case.\nA closed-loop client waits for a response before sending the next request. When the system slows, offered load decreases. An open-loop generator schedules arrivals independently and can expose queue buildup. Choose the mode that matches the question and report dropped or delayed requests.\nWarm up when measuring steady-state performance, but measure cold starts separately if users encounter them. Keep failed requests in the operational report. A throughput figure that ignores rejected requests can hide overload."
+      ],
+      [
+        "Quality and efficiency share a budget",
+        "Total tokens per second is a system-throughput metric. It differs from tokens per second observed by one user. Larger batches can improve throughput while increasing a user's waiting time.\nPrefill processes the input context. Decode generates subsequent tokens, often using a key-value cache to reuse intermediate attention state. Long inputs, long outputs, and many concurrent sequences create different resource demands.\nMeasure quality after changing quantization, speculative decoding, truncation, or sampling. Report a Pareto frontier: configurations where improving one objective requires worsening another. Choose the operating point using the application's latency, cost, and correctness requirements."
+      ],
+      [
+        "Publish an interpretable performance report",
+        "MLPerf Inference defines benchmark workloads, quality requirements, and performance scenarios. Its protocol illustrates why throughput should be interpreted with workload and accuracy constraints. Follow the exact rules before claiming an official result.\nFor an application study, publish hardware and software versions, request counts, test duration, warmup, load levels, latency quantiles, successful throughput, error rate, and cost assumptions. A local script can report useful measurements without claiming MLPerf compliance.\nMeasure energy with an explicit system boundary and instrumentation if it is part of the comparison. Hardware nameplate power is not measured energy per task. Include idle overhead and utilization assumptions where they affect the conclusion."
+      ]
+    ],
+    "exercise": "Design a three-load-level test. Report request rate, successful completions, p50 and p95 latency, failure rate, and answer quality at each level.",
+    "question": "Can a non-streaming HTTP timer measure time to first token?",
+    "answer": "No. It measures response completion time under that boundary. First-token timing requires streaming or suitable server instrumentation.",
+    "refs": [
+      "mlperf",
+      "vllm"
+    ]
+  },
+  {
+    "slug": "tooling",
+    "after": "eval-platform",
+    "title": "Run a public benchmark with a harness",
+    "stage": "Operate and improve",
+    "level": "90–95",
+    "summary": "Choose evaluation tooling, run a smoke experiment, and preserve its configuration.",
+    "sections": [
+      [
+        "Choose by execution needs",
+        "Use a reusable benchmark harness when reproducing public tasks and scoring conventions. Use an application evaluation tool when prompts, retrieval, providers, and regression checks are the main objects. Use an agent evaluation framework when tasks need tools, environments, and traces.\nEleutherAI's language-model evaluation harness supplies task definitions and model backends. Inspect AI supplies components for model and agent evaluations. Promptfoo provides declarative application checks. These tools overlap, so choose by the experiment rather than by the number of integrations.\nCompare support for custom graders, isolated execution, artifacts, concurrency, caching, and version pinning. A dashboard without exportable case-level evidence makes later audits harder. Keep the run manifest outside a single proprietary interface when possible."
+      ],
+      [
+        "Prepare a small public run",
+        "Create a virtual environment. Install the harness with the backend required by your model. Record the installed packages, model revision, dataset revision, and task name before a full run.\nThe command example below uses GPT-2 and a small HellaSwag subset to check the execution path. It downloads model weights and task data, so review the upstream access and license requirements. CPU execution is possible but can be slow.\nA limited run is a smoke test. Its score is not a full HellaSwag result. Keep the subset flag in the report, and never compare the subset score directly with a published full-test score."
+      ],
+      [
+        "Inspect before scaling",
+        "Open several logged samples. Check the prompt, answer options, scores, and selected answer. A likelihood-scored multiple-choice task is different from asking a chat model to emit an answer letter.\nIf you use an instruction model, verify its intended template and task protocol. Do not apply a chat template automatically to every base model. A formatting change can alter the experiment.\nAfter the smoke run, freeze the model and task revisions. Remove the subset limit for the intended full evaluation. Record the exact command and configuration. Public package interfaces can change, so use the documentation that matches the installed version."
+      ],
+      [
+        "Diagnose common failures",
+        "An out-of-memory error suggests reducing the batch size or choosing a model that fits the hardware. It does not justify silently truncating evaluation cases. A missing task name suggests a version or naming mismatch.\nNear-random multiple-choice results can reflect weak capability, an incorrect template, or scoring mistakes. Inspect per-case evidence before choosing an explanation. Treat authentication and download failures as setup failures rather than model failures.\nThis notebook verifies its own small labs and provides a documentation-based harness walkthrough. It does not claim to have run a full external benchmark or measured a frontier model. Reproduction requires the listed software and data access."
+      ]
+    ],
+    "code": "python -m venv .venv\n# Activate the virtual environment for your shell.\npython -m pip install \"lm_eval[hf]\"\nlm-eval run --help\nlm-eval ls tasks\nlm-eval run --model hf --model_args pretrained=gpt2 --tasks hellaswag --device cpu --batch_size 1 --limit 10 --output_path results/smoke --log_samples\npython -m pip freeze > results/environment.txt",
+    "exercise": "Run the ten-case smoke command if you have the required download access. Inspect two samples and record the model, task, prompt, and metric.",
+    "question": "Can the ten-case smoke result be presented as a full benchmark score?",
+    "answer": "No. It checks setup on a small subset. Report the subset explicitly and run the specified full split for a full benchmark result.",
+    "refs": [
+      "harness-cli",
+      "inspect",
+      "promptfoo"
+    ]
+  },
+  {
+    "slug": "real-model",
+    "after": "tooling",
+    "title": "Collect outputs from a real model",
+    "stage": "Operate and improve",
+    "level": "90–98",
+    "summary": "Connect the evaluation dataset to a local or compatible hosted endpoint without sending labels.",
+    "sections": [
+      [
+        "Separate generation from grading",
+        "The existing comparison lab starts with stored predictions. The endpoint collection lab obtains new predictions from a model server. Separating these stages lets you audit generation and revise a grader without paying to generate every answer again.\nEach request sends only the case input and a fixed system instruction. Expected answers and slice labels stay in the evaluator. Including the answer key in a model prompt would invalidate the experiment.\nThe collector uses the common chat-completions request shape. It is not a universal provider adapter. Some servers require different token-limit fields, response formats, or authentication. Inspect the server documentation before interpreting a request error as model behavior."
+      ],
+      [
+        "Run the collector deliberately",
+        "Start a model server that supports the required endpoint. Identify its exact model name. Use the lab command with that name and the server's base URL. The default endpoint is local, so no hosted provider receives data unless you select one.\nFor a hosted endpoint, provide an API key through the AI_EVAL_API_KEY environment variable if required. Do not place a key in a command that you publish or in the repository. Requests can incur charges under the selected provider's terms.\nUse data that you are permitted to send to the chosen endpoint. The included dataset is synthetic. The collector does not upload training files, hidden labels, or arbitrary workspace files."
+      ],
+      [
+        "Record failures and timing honestly",
+        "The script sends one sequential attempt per case, with a timeout and a fixed output budget. It stores successful answer strings in predictions.json and records attempt metadata in manifest.json. Failed requests remain absent from predictions and count as failures in the comparison lab.\nThe timer measures non-streaming request duration. It does not measure time to first token, concurrent throughput, or server-only compute time. Usage fields are recorded only when the endpoint returns them.\nThe manifest identifies the requested model, endpoint, settings, case hash, and request status. A requested model alias may change at the server. For a strict reproduction, also record the server's resolved checkpoint and serving configuration."
+      ],
+      [
+        "Compare real runs fairly",
+        "Collect baseline and candidate outputs on the same cases with declared settings. Pass both prediction files to evaluate.py. Do not compare a real model against the sample synthetic baseline as though both were measured models.\nThe sample exact-answer grader intentionally penalizes extra prose. If that contract is wrong for your application, revise the contract and grader before comparing systems. Store original outputs so the change is auditable.\nThe collector's automated tests use a local fake HTTP server to verify request construction and error handling. They are software tests, not model quality measurements. No hosted model result is implied by those tests."
+      ]
+    ],
+    "code": "python labs/collect_predictions.py --model YOUR_LOCAL_MODEL --base-url http://127.0.0.1:1234/v1 --output labs/runs/baseline\n# Repeat with the candidate model and a separate output directory.\npython labs/collect_predictions.py --model YOUR_CANDIDATE --base-url http://127.0.0.1:1234/v1 --output labs/runs/candidate\npython labs/evaluate.py --baseline labs/runs/baseline/predictions.json --candidate labs/runs/candidate/predictions.json",
+    "exercise": "Collect one baseline and one candidate run. Inspect the manifest, verify that labels were excluded from requests, and explain every failed request.",
+    "question": "Should a failed request disappear from the accuracy denominator?",
+    "answer": "No. Under this lab's protocol it remains a failed task. The manifest records the operational failure so it can be distinguished from an incorrect answer.",
+    "refs": []
+  },
+  {
+    "slug": "release-decisions",
+    "after": "production",
+    "title": "Release decisions, governance, and maintenance",
+    "stage": "Operate and improve",
+    "level": "95–100",
+    "summary": "Turn evidence into a decision with explicit ownership, conditions, and follow-up checks.",
+    "sections": [
+      [
+        "Define acceptance conditions",
+        "An acceptance condition states what evidence is sufficient for a particular release. It should identify the metric, population, uncertainty rule, and owner. Thresholds should reflect the use case rather than a universal benchmark target.\nA hypothetical support assistant might require a confidence-bound improvement on task success, no new severe regression, and acceptable latency at the planned traffic level. These are example project choices, not external standards.\nDistinguish a hard gate from a diagnostic metric. If every dashboard number is treated as a gate, teams can accumulate contradictory rules. If no metric has decision consequences, an evaluation becomes a report rather than a release control."
+      ],
+      [
+        "Preserve evidence and responsibility",
+        "A dataset card explains where cases came from and what they represent. A model or system card describes the evaluated configuration and intended use. A decision record links those artifacts to the evidence, exceptions, and person responsible for the decision.\nRetain failed experiments and unresolved issues. A later reviewer needs to know whether the candidate was chosen after two experiments or two hundred. Record changes to graders, data, and deployment settings alongside model changes.\nFor specialized or consequential uses, include qualified domain review and the applicable organizational requirements. A benchmark pass does not establish clinical effectiveness, legal compliance, or authorization to deploy."
+      ],
+      [
+        "Maintain private evaluations safely",
+        "Evaluation logs can contain user data, confidential documents, and model outputs that repeat sensitive input. Apply access controls and retention rules to the entire artifact set. A public repository should contain only material intended for public release.\nUse synthetic secrets for leakage tests and simulated actions for destructive tool tests. Examine whether the system crosses a trust boundary, not merely whether it writes a suspicious phrase. The expected outcome should specify the protected resource and forbidden action.\nA private benchmark can lose value through repeated exposure. Track access and rotate final holdouts when their role has shifted into development. Preserve an older version for historical comparison and label its limitations."
+      ],
+      [
+        "Reassess after deployment changes",
+        "A provider update, retrieval index refresh, prompt edit, tool schema change, or new user population can invalidate an earlier result. Define which changes trigger a smoke suite, a targeted suite, or a complete reassessment.\nMonitor both task outcomes and the health of the measurement system. Missing traces, stale labels, or a changed judge can make a stable dashboard misleading. Test the evaluator and its data pipeline as part of normal maintenance.\nThe final decision can be to deploy with constraints, gather more evidence, or keep the baseline. State the unresolved questions and the event that would change the decision. That makes the evaluation useful after the report is written."
+      ]
+    ],
+    "exercise": "Complete a release decision record with one hard gate, two diagnostic metrics, an owner, a rollback condition, and a reevaluation trigger.",
+    "question": "Does a model replacement require reevaluation if the product interface stays the same?",
+    "answer": "Yes. The interface does not establish equivalent behavior. Reevaluate the tasks and constraints affected by the model change under the actual deployed configuration.",
+    "refs": [
+      "preparedness",
+      "deepmind"
+    ]
+  }
+]

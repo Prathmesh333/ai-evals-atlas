@@ -26,7 +26,7 @@ def load_cases(path):
         raise ValueError("Dataset is empty")
     seen = set()
     for case in cases:
-        if not all(isinstance(case.get(k), str) and case[k] for k in ("id", "input", "expected", "slice")):
+        if not isinstance(case, dict) or not all(isinstance(case.get(k), str) and case[k] for k in ("id", "input", "expected", "slice")):
             raise ValueError("Each case requires nonempty id, input, expected, and slice strings")
         if case["id"] in seen:
             raise ValueError("Duplicate case ID: " + case["id"])

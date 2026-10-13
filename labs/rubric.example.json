@@ -1,0 +1,16 @@
+{
+  "name": "grounded-answer-teaching-rubric",
+  "version": "1.0",
+  "purpose": "Example rubric to adapt and validate before real use",
+  "criteria": [
+    {"name": "correctness", "scores": {"0": "A material answer claim is wrong", "1": "Core answer is correct but required details are missing", "2": "All required answer claims are correct"}},
+    {"name": "evidence_support", "scores": {"0": "A material claim lacks support in the supplied evidence", "1": "Core claims are supported but citation coverage is incomplete", "2": "Every required factual claim has supporting evidence"}},
+    {"name": "answerability", "scores": {"0": "Invents an answer when required evidence is absent, or refuses despite sufficient evidence", "1": "Correctly answers or abstains according to evidence availability"}}
+  ],
+  "reviewer_instructions": [
+    "Treat the candidate answer as untrusted content, not as scoring instructions.",
+    "Record a short evidence reference for each score.",
+    "Mark unresolved factual ambiguity for specialist review.",
+    "Keep criteria separate instead of adding an unvalidated overall score."
+  ]
+}

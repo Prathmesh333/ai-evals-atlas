@@ -11,7 +11,7 @@
 
 ## Scope and evidence
 
-The curriculum focuses on language models and their surrounding systems. It introduces wider concerns such as multimodal preprocessing and distribution shift. It does not claim to cover every AI subfield, every benchmark, or undisclosed lab processes.
+The curriculum covers classical prediction models, language models, multimodal systems, and agents. The expanded edition has 30 chapters and explicit learning outcomes. It does not claim to cover every AI subfield, every benchmark, or undisclosed lab processes.
 
 Public lab practices are attributed to dated sources. The suggested multi-stage evaluation program is labeled as a teaching synthesis. Dataset fixtures and stored model predictions are explicitly synthetic. Token prices in the calculator are illustrative inputs.
 
@@ -32,3 +32,25 @@ Public lab practices are attributed to dated sources. The suggested multi-stage 
 The notebooks use small examples to teach experimental design. No new frontier-model benchmark scores were measured. Statistical intervals rely on the stated sampling assumptions. Source pages and software interfaces can change after the review date.
 
 The writing guide improves clarity. It does not certify this project against ASD-STE100 or another external writing standard.
+
+## Completeness audit and expansion
+
+The original 18-chapter edition introduced the lifecycle but lacked depth in several areas. The expansion adds dedicated treatments rather than only renaming the guide:
+
+| Gap | Added coverage |
+| --- | --- |
+| AI beyond language models | Prediction metrics, cross-validation, forecasting, ranking, clustering, policy evaluation |
+| Experimental rigor | Estimands, dependence, power, ablations, rare failures, stopping rules |
+| Human evaluation | Rubrics, annotation operations, agreement, ties, preference-model interpretation |
+| Reasoning and code | Outcome versus explanation, inference budgets, selection, executable tests, instruction constraints |
+| Context and memory | Position and length tests, oracle context, persistence, updates, deletion |
+| Multimodal evaluation | Vision, documents, speech error, video sampling, generated media |
+| Fairness and access | Group metrics, intersections, languages, accessibility outcomes |
+| Measurement science | Validity, reliability, saturation, contamination, item response theory |
+| Performance benchmarking | Timing boundaries, workload, load generation, quality constraints, cost and energy |
+| Tooling and real outputs | Public-harness walkthrough and a tested chat-completions collector |
+| Release operations | Acceptance rules, evidence ownership, artifact access, reevaluation triggers |
+
+The coverage page maps every chapter to an exercise and provides five reading routes. Templates cover dataset documentation, grading, and final reporting. The expanded directory includes 22 benchmark families and suites.
+
+The public-harness command is based on checked documentation. No full external benchmark or hosted-model quality run was performed. The endpoint collector passed local HTTP-fixture tests for label exclusion, malformed responses, failed requests, redirects, output preservation, and metadata. Software test results are not model capability results.

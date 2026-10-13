@@ -47,7 +47,7 @@ def svg(slug):
     # Two rows keep labels legible on phones without shrinking five boxes into one row.
     positions = [(20,35),(250,35),(480,35),(480,170),(250,170)]
     edges = [(0,1),(1,2),(2,3),(3,4)]
-    if slug == 'dataset-design':
+    if slug in ('dataset-design', 'long-context'):
         positions = [(20,100),(250,100),(480,15),(480,105),(480,195)]
         edges = [(0,1),(1,2),(1,3),(1,4)]
     if slug == 'statistics':

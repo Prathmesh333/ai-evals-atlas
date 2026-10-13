@@ -40,12 +40,13 @@ try:
         page.locator('[data-complete]').click()
         page.reload()
         assert page.locator('[data-complete]').get_attribute('aria-pressed')=='true'
-        assert '1 of 18' in page.locator('#progress-label').inner_text()
+        chapter_count=page.evaluate("window.ATLAS_SEARCH.filter(item => item.kind === 'chapter').length")
+        assert f'1 of {chapter_count}' in page.locator('#progress-label').inner_text()
         page.locator('summary').click()
         assert page.locator('details').get_attribute('open') is not None
         page.goto(base+'/benchmarks.html')
         page.locator('#benchmark-category').select_option('Code')
-        assert page.locator('.benchmark-card:visible').count()==2
+        assert page.locator('.benchmark-card:visible').count()==4
         page.locator('#benchmark-search').fill('qzx')
         assert page.locator('#benchmark-empty').is_visible()
         page.goto(base+'/playground.html')
