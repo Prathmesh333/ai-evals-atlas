@@ -77,7 +77,7 @@ def detailed_svg(key):
         d.text(20,156,'QUERY TIME',10,True)
         d.box(20,180,190,'Question','Query representation');d.box(255,180,190,'Retrieve + authorize','Select relevant evidence');d.box(490,180,190,'Generator','Question + evidence')
         d.path('M210 211 H247');d.path('M445 211 H482');d.path('M585 106 V135 H355 V172')
-        d.path('M585 242 V275 H363');d.box(150,276,205,'Answer + citations','Check correctness + support')
+        d.path('M585 242 V307 H363');d.box(150,276,205,'Answer + citations','Check correctness + support')
     elif key=='distributed-workers':
         d.box(235,15,240,'Versioned training data','Different batch per worker',accent=True)
         for x,n in [(20,1),(255,2),(490,3)]:
